@@ -4,7 +4,7 @@
 
 ## Aim of this project
 
-This project is aimed at implementing a simple http server using [koa.js](https://github.com/koajs/koa). In *The Node Beginner Book*, a similar server was implemented without any frameworks.
+This project is aimed at implementing a simple http server using [koa.js](https://github.com/koajs/koa). In _The Node Beginner Book_, a similar server was implemented without any frameworks.
 
 In the following sections, the development of this project is illustrated step by step.
 
@@ -224,28 +224,29 @@ We will write the test first.
 ```javascript
 // test/index.spec.js
 
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-const {server} = require('../index');
+const chai = require("chai");
+const chaiHttp = require("chai-http");
+const { server } = require("../index");
 const expect = chai.expect;
 
 chai.use(chaiHttp);
 
-describe('Basic routes', () => {
+describe("Basic routes", () => {
   after(() => {
     server.close();
   });
 
-  it('should get HOME', (done) => {
-    chai.request(server)
-      .get('/')
+  it("should get HOME", done => {
+    chai
+      .request(server)
+      .get("/")
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.text).equal('Hello World');
+        expect(res.text).equal("Hello World");
         done();
       });
   });
-})
+});
 ```
 
 We can then run `yarn test` , and it will fail doubtlessly for we have not implemented the corresponding functions. We are going to do it now.
@@ -253,11 +254,11 @@ We can then run `yarn test` , and it will fail doubtlessly for we have not imple
 ```javascript
 // index.js
 
-const Koa = require('koa');
+const Koa = require("koa");
 const app = new Koa();
 
 app.use(async ctx => {
-  ctx.body = 'Hello World';
+  ctx.body = "Hello World";
 });
 
 const server = app.listen(3000);
@@ -285,24 +286,24 @@ We will first migrate the 'Hello World' code to `router.js` while not letting th
 ```javascript
 // router.js
 
-const router = require('koa-router')();
+const router = require("koa-router")();
 
-const route = router.get('home', '/', home);
+const route = router.get("home", "/", home);
 
 async function home(ctx) {
-  ctx.body = 'Hello World';
+  ctx.body = "Hello World";
 }
 
 module.exports = {
-  route,
+  route
 };
 ```
 
 ```javascript
 // index.js
 
-const Koa = require('koa');
-const {route} = require('./router');
+const Koa = require("koa");
+const { route } = require("./router");
 
 const app = new Koa();
 
@@ -327,17 +328,18 @@ Test goes first.
 // test/index.spec.js
 
 // ...
-it('should upload a text', (done) => {
-    chai.request(server)
-      .post('/upload/text')
-      .set('content-type', 'application/json')
-      .send({'textLayout': 'hello'})
-      .end((err, res) => {
-        expect(res).to.have.status(200);
-        expect(res.text).equal('You\'ve sent the text: hello');
-        done();
-      });
-  });
+it("should upload a text", done => {
+  chai
+    .request(server)
+    .post("/upload/text")
+    .set("content-type", "application/json")
+    .send({ textLayout: "hello" })
+    .end((err, res) => {
+      expect(res).to.have.status(200);
+      expect(res.text).equal("You've sent the text: hello");
+      done();
+    });
+});
 
 // ...
 ```
@@ -347,8 +349,9 @@ Then the implementation:
 ```javascript
 // router.js
 
-const route = router.get('home', '/', home)
-  .post('upload-text', '/upload/text', uploadText);
+const route = router
+  .get("home", "/", home)
+  .post("upload-text", "/upload/text", uploadText);
 
 // ...
 
@@ -374,7 +377,7 @@ yarn add koa-body
 
 // ...
 
-const koaBody = require('koa-body');
+const koaBody = require("koa-body");
 
 // ...
 
